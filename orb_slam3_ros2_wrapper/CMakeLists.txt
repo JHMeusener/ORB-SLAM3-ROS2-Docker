@@ -43,23 +43,23 @@ link_directories(
   include
 )
 
-add_executable(rgbd
+add_executable(rgb
   src/type_conversion.cpp
   src/orb_slam3_interface.cpp
-  src/rgbd/rgbd-slam-node.cpp
-  src/rgbd/rgbd.cpp
+  src/rgb/rgb-slam-node.cpp
+  src/rgb/rgb.cpp
 )
-ament_target_dependencies(rgbd rclcpp sensor_msgs cv_bridge message_filters ORB_SLAM3 Pangolin tf2_ros tf2_eigen slam_msgs pcl_ros pcl_conversions PCL nav_msgs)
+ament_target_dependencies(rgb rclcpp sensor_msgs cv_bridge message_filters ORB_SLAM3 Pangolin tf2_ros tf2_eigen slam_msgs pcl_ros pcl_conversions PCL nav_msgs)
 
 # add_executable(test1
 #   src/ft.cpp
 #   src/test_frame.cpp
 # )
-ament_target_dependencies(rgbd rclcpp sensor_msgs cv_bridge message_filters ORB_SLAM3 Pangolin tf2_ros tf2_eigen slam_msgs pcl_ros pcl_conversions PCL nav_msgs)
+ament_target_dependencies(rgb rclcpp sensor_msgs cv_bridge message_filters ORB_SLAM3 Pangolin tf2_ros tf2_eigen slam_msgs pcl_ros pcl_conversions PCL nav_msgs)
 # ament_target_dependencies(test1 rclcpp sensor_msgs cv_bridge message_filters ORB_SLAM3 Pangolin tf2_ros tf2_eigen slam_msgs pcl_ros pcl_conversions PCL nav_msgs)
 # test1
-target_link_libraries(rgbd ${PCL_LIBRARIES})
-install(TARGETS rgbd
+target_link_libraries(rgb ${PCL_LIBRARIES})
+install(TARGETS rgb
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY launch params

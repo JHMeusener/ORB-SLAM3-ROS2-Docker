@@ -85,6 +85,8 @@ namespace ORB_SLAM3_Wrapper
 
         bool trackRGBD(const sensor_msgs::msg::Image::SharedPtr msgRGB, const sensor_msgs::msg::Image::SharedPtr msgD, Sophus::SE3f &Tcw);
 
+        bool trackRGB(const sensor_msgs::msg::Image::SharedPtr msgRGB, Sophus::SE3f &Tcw);
+
     private:
         std::shared_ptr<ORB_SLAM3::System> mSLAM_;
         std::shared_ptr<WrapperTypeConversions> typeConversions_;

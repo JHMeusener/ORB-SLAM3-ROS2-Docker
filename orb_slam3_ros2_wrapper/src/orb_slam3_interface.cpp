@@ -360,5 +360,53 @@ namespace ORB_SLAM3_Wrapper
             }
             return false;
         }
+    };
+
+    bool ORBSLAM3Interface::trackRGB(const sensor_msgs::msg::Image::SharedPtr msgRGB, Sophus::SE3f &Tcw)
+    {
+        cv_bridge::CvImageConstPtr cvRGB;
+        // Copy the ros rgb image message to cv::Mat.
+        try
+        {
+            cvRGB = cv_bridge::toCvShare(msgRGB);
+        }
+        catch (cv_bridge::Exception &e)
+        {
+            std::cerr << "cv_bridge exception RGB!" << endl;
+            return false;
+        }
+
+        // track the frame.
+        Tcw = mSLAM_->TrackMonocular(cvRGB->image, typeConversions_->stampToSec(msgRGB->header.stamp));
+        auto currentTrackingState = mSLAM_->GetTrackingState();
+        auto orbLoopClosing = mSLAM_->GetLoopClosing();
+        if (orbLoopClosing->mergeDetected())
+        {
+            // do not publish any values during map merging. This is because the reference poses change.
+            std::cout << "Waiting for merge to finish." << endl;
+            return false;
+        }
+        if (currentTrackingState == 2)
+        {
+            calculateReferencePoses();
+            correctTrackedPose(Tcw);
+            return true;
+        }
+        else
+        {
+            switch (currentTrackingState)
+            {
+            case 0:
+                std::cerr << "ORB-SLAM failed: No images yet." << endl;
+                break;
+            case 1:
+                std::cerr << "ORB-SLAM failed: Not initialized." << endl;
+                break;
+            case 3:
+                std::cerr << "ORB-SLAM failed: Tracking LOST." << endl;
+                break;
+            }
+            return false;
+        }
     }
 }
